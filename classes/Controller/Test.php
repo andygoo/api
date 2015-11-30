@@ -2,6 +2,47 @@
 
 class Controller_Test extends Controller_Api {
 
+    public function action_zz() {
+		$args = trim($_GET['q']);
+		
+		$args = explode(' ', $args);
+		$args = array_map('trim', $args);
+		$args = array_filter($args);
+		
+		$func = $args[0];
+		unset($args[0]);
+		$ret = call_user_func_array($func, $args);
+		
+		$this->response['data'] = $ret;
+	}
+	
+	
+	
+    public function action_zz3() {
+		$str = trim($_GET['q']);
+		
+		exec("Rscript D:/ws/f.R {$str} 2>&1", $output, $ret);
+		
+		
+		$this->response['data'] = $output;
+	}
+	
+	
+	
+    public function action_zz2() {
+		$str = '';
+		$content = trim($_GET['q']);
+		$ret_json = CURL::get('http://rmbz.net/Api/AiTalk.aspx?key=rmbznet&word='.$content);
+		$ret_array = json_decode($ret_json, true);
+		if (isset($ret_array['result']) && $ret_array['result']==1) {
+			$str = $ret_array['content'];
+		}
+		  
+		$this->response['data'] = $str;
+	}
+	
+	
+	
     public function action_list() {
         $ret = array(
             array(
