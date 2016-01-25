@@ -38,8 +38,11 @@ Kohana::modules(array(
 ));
 Kohana::$log->attach(new Log_File(APPPATH . 'logs'));
 
-Route::set('list_apis', '<controller>/<action>(.<format>)', array('format'=>'(json|xml)'))->defaults(array('controller' => 'api','action' => 'error'));
-Route::set('catch_all', '<path>', array('path' => '.*'))->defaults(array('controller' => 'api','action' => 'error'));
+Route::set('list_apis', '<controller>(/<action>)(.<format>)', array('format'=>'(json|xml)'))
+->defaults(array('controller' => 'api', 'action' => 'index'));
+
+Route::set('catch_all', '<path>', array('path' => '.*'))
+->defaults(array('controller' => 'api', 'action' => 'error'));
 
 try {
 	echo Request::instance()->execute();
