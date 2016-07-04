@@ -63,7 +63,8 @@ class Controller_Reply extends Controller_Api {
 			$this->response['data'] = '....';
 		} else {
 			$this->redis = new Redis();
-			$this->redis->connect('192.168.1.106', '6379');
+			$redis_config = Kohana::config('redis.default');
+			$this->redis->connect($redis_config['host'], $redis_config['port']);
 			$aa = $this->redis->get('w_' . $uid);
 			if (empty($aa)) {
 				$idx = $this->redis->get($uid);
