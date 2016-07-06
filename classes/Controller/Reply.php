@@ -60,27 +60,32 @@ class Controller_Reply extends Controller_Api {
 		$q = Arr::get($_GET, 'q');
 		$uid = Arr::get($_GET, 'uid');
 		if (empty($q) || empty($uid)) {
-			$this->response['data'] = '....';
+			$this->response['data'] = '';
 		} else {
 			$this->redis = new Redis();
 			$redis_config = Kohana::config('redis.default');
 			$this->redis->connect($redis_config['host'], $redis_config['port']);
-			$aa = $this->redis->get('w_' . $uid);
-			if (empty($aa)) {
-				$idx = $this->redis->get($uid);
-				$idx = intval($idx);
-				if (isset($this->words[$idx])) {
-					$reply = $this->words[$idx];
-					$time = ceil(strlen($reply) * 0.1) + rand(2, 10);
-					$time = min($time, 29);
-					$this->redis->setex('w_' . $uid, $time, 1);
-					//$this->redis->set($uid, ++$idx);
-					$this->redis->setex($uid, 600, ++$idx);
-					sleep($time);
-					$this->response['data'] = $reply;
-				}
+
+			$idx = $this->redis->get($uid);
+			$idx = intval($idx);
+			if (isset($this->words[$idx])) {
+				$reply = $this->words[$idx];
+				$this->redis->set($uid, ++$idx);
+				$this->response['data'] = $reply;
+			} else {
+				$this->response['data'] = '';
 			}
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
 
