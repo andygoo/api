@@ -42,7 +42,7 @@ Route::set('list_apis', '<controller>(/<action>)(.<format>)', array('format'=>'(
 ->defaults(array('controller' => 'api', 'action' => 'index'));
 
 Route::set('catch_all', '<path>', array('path' => '.*'))
-->defaults(array('controller' => 'api', 'action' => 'error'));
+->defaults(array('controller' => 'error', 'action' => '404'));
 
 try {
 	echo Request::instance()->execute();
