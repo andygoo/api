@@ -48,12 +48,15 @@ try {
 	echo Request::instance()->execute();
 } catch(Exception $e) {
 	$response = array('errno'=>$e->getCode(), 'errmsg'=>$e->getMessage());
-	$format = 'json';
-	$path = Request::instance()->uri();
-	$pathinfo = pathinfo($path);
+	$uri = Request::instance()->uri();
+	$pathinfo = pathinfo($uri);
 	if (!empty($pathinfo['extension'])) {
 		$format = $pathinfo['extension'];
+	} else {
+		$format = 'json';
 	}
+	$response['url'] = $_SERVER['REQUEST_URI'];
+	//$response['data'] = file_get_contents('php://input');
 	if ($format == 'xml') {
 		header('Content-Type: application/xml; charset=utf-8');
 		echo Arr::toxml($response, 'response');
@@ -61,5 +64,6 @@ try {
 		header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($response, JSON_UNESCAPED_UNICODE);
 	}
+	Kohana::$log->add(Log::ERROR, json_encode($response, JSON_UNESCAPED_UNICODE));
 }
 
